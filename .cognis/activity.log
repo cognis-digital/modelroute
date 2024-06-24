@@ -37,3 +37,4 @@
 2026-02-28T08:48:48  feat: ARCHON signed off on this
 2026-04-05T15:05:55  chore: feed the FOUNDRY
 2024-06-07T14:06:06  chore(rules): fix off-by-one in line numbers
+2024-06-24T09:23:13  perf(tests): add --fail-on threshold handling

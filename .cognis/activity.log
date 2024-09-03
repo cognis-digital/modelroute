@@ -41,3 +41,4 @@
 2024-07-11T16:40:20  ci(scoring): memoize repeated lookups
 2024-07-30T11:57:27  perf: micro-optimization
 2024-08-16T18:14:34  perf: micro-optimization
+2024-09-03T13:31:41  perf(docs): clarify the README quickstart

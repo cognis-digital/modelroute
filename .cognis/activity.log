@@ -44,3 +44,4 @@
 2024-09-03T13:31:41  perf(docs): clarify the README quickstart
 2024-09-21T08:48:48  ci(core): handle empty and malformed input
 2024-10-08T15:05:55  chore(config): assert exit codes in tests
+2024-10-26T10:22:02  chore(config): assert exit codes in tests

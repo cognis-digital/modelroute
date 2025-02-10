@@ -49,3 +49,4 @@
 2024-12-19T12:56:16  refactor: I have altered the code. pray I don't alter it further
 2025-01-05T19:13:23  fix(deps): bump the dev toolchain
 2025-01-23T14:30:30  fix(deps): bump the dev toolchain
+2025-02-10T09:47:37  perf(cache): add color + severity icons

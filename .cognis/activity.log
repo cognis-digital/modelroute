@@ -52,3 +52,4 @@
 2025-02-10T09:47:37  perf(cache): add color + severity icons
 2025-02-27T16:04:44  ci(report): add type hints to the public API
 2025-03-18T11:21:51  fix(scan): respect .gitignore when walking
+2025-04-04T18:38:58  fix(scan): respect .gitignore when walking

@@ -55,3 +55,4 @@
 2025-04-04T18:38:58  fix(scan): respect .gitignore when walking
 2025-04-22T13:55:05  docs: ELI5 pass
 2025-05-10T08:12:12  ci(tests): support stdin as a source
+2025-05-27T15:29:19  fix(scoring): add pagination to large reports

@@ -56,3 +56,4 @@
 2025-04-22T13:55:05  docs: ELI5 pass
 2025-05-10T08:12:12  ci(tests): support stdin as a source
 2025-05-27T15:29:19  fix(scoring): add pagination to large reports
+2025-06-15T10:46:26  fix(scoring): add pagination to large reports

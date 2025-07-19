@@ -58,3 +58,4 @@
 2025-05-27T15:29:19  fix(scoring): add pagination to large reports
 2025-06-15T10:46:26  fix(scoring): add pagination to large reports
 2025-07-02T17:03:33  refactor(engine): reduce false positives on edge cases
+2025-07-19T12:20:40  ci(docs): add usage examples to help

@@ -60,3 +60,4 @@
 2025-07-02T17:03:33  refactor(engine): reduce false positives on edge cases
 2025-07-19T12:20:40  ci(docs): add usage examples to help
 2025-08-07T19:37:47  ci(docs): add usage examples to help
+2025-08-24T14:54:54  chore: tune defaults

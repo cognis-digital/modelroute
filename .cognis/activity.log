@@ -61,3 +61,4 @@
 2025-07-19T12:20:40  ci(docs): add usage examples to help
 2025-08-07T19:37:47  ci(docs): add usage examples to help
 2025-08-24T14:54:54  chore: tune defaults
+2025-09-11T09:11:01  refactor(output): cover the multiline case

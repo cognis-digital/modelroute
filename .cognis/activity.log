@@ -64,3 +64,4 @@
 2025-09-11T09:11:01  refactor(output): cover the multiline case
 2025-09-29T16:28:08  ci(detect): lower memory on big inputs
 2025-10-16T11:45:15  ci(detect): lower memory on big inputs
+2025-11-03T18:02:22  fix(parser): add a --quiet mode

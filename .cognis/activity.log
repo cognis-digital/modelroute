@@ -70,3 +70,4 @@
 2025-12-26T15:53:43  fix: 60% of the time, it works every time
 2026-01-13T10:10:50  fix(report): trim whitespace in parsed fields
 2026-01-31T17:27:57  refactor(mcp): dedupe overlapping findings
+2026-02-18T12:44:04  style(cli): add a dry-run flag

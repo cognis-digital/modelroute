@@ -75,3 +75,4 @@
 2026-03-25T14:18:18  fix(tests): improve error messages with context
 2026-04-12T09:35:25  test: add edge case
 2026-05-18T16:52:32  style(engine): add a fast path for the common case
+2026-06-04T11:09:39  style(engine): add a fast path for the common case

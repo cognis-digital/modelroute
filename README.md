@@ -36,9 +36,13 @@ AI infra
 <a name="features"></a>
 ## Features
 
-- ✅ Todo
-- ✅ Fixme
-- ✅ Xxx
+- ✅ Resolve
+- ✅ Build Request
+- ✅ Estimate Tokens
+- ✅ Messages Tokens
+- ✅ Dispatch
+- ✅ List Models
+- ✅ List Providers
 - ✅ Runs on Linux/macOS/Windows · Docker · devcontainer
 - ✅ Ports in Python, JavaScript, Go, and Rust (`ports/`)
 

@@ -126,7 +126,17 @@ Pipes into your stack: **SARIF** for code-scanning, **JSON** for anything, an **
 <div align="right"><a href="#top">↑ back to top</a></div>
 
 <a name="install-anywhere"></a>
-## Install anywhere
+## Install — every way, every platform
+
+```bash
+pip install "git+https://github.com/cognis-digital/modelroute.git"    # pip (works today)
+pipx install "git+https://github.com/cognis-digital/modelroute.git"   # isolated CLI
+uv tool install "git+https://github.com/cognis-digital/modelroute.git" # uv
+pip install cognis-modelroute                                          # PyPI (when published)
+docker run --rm ghcr.io/cognis-digital/modelroute:latest --help        # Docker
+brew install cognis-digital/tap/modelroute                             # Homebrew tap
+curl -fsSL https://raw.githubusercontent.com/cognis-digital/modelroute/main/install.sh | sh
+```
 
 | Linux | macOS | Windows | Docker | Cloud |
 |---|---|---|---|---|

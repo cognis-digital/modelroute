@@ -1,0 +1,10 @@
+{
+  "name": "@cognis/modelroute",
+  "version": "0.2.0",
+  "description": "JavaScript port of modelroute (Cognis Neural Suite)",
+  "bin": {
+    "modelroute": "index.js"
+  },
+  "license": "LicenseRef-COCL-1.0",
+  "type": "module"
+}

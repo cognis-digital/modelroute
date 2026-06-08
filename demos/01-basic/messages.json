@@ -1,0 +1,6 @@
+{
+  "messages": [
+    {"role": "system", "content": "You are a terse senior SRE. Answer in one sentence."},
+    {"role": "user", "content": "What is a sensible default timeout for an inference proxy upstream call, and why?"}
+  ]
+}

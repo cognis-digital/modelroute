@@ -36,6 +36,7 @@ RULES = [
     ("MOD-001", "high", "TODO", "Unresolved TODO / placeholder left in input", "Resolve before shipping."),
     ("MOD-002", "medium", "FIXME", "FIXME marker found", "Address the flagged issue."),
     ("MOD-003", "low", "XXX", "XXX marker found", "Review the flagged section."),
+    ("MOD-103", "high", 'password =', 'Hardcoded password assignment', 'Use a secret manager; never commit credentials.'),
 ]
 
 def scan(target: str, **opts) -> ScanResult:

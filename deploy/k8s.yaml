@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: modelroute, labels: { app: modelroute } }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: modelroute } }
+  template:
+    metadata: { labels: { app: modelroute } }
+    spec:
+      containers:
+        - name: modelroute
+          image: ghcr.io/cognis-digital/modelroute:latest
+          ports: [{ containerPort: 8000 }]
+          resources:
+            requests: { cpu: "50m", memory: "64Mi" }
+            limits: { cpu: "500m", memory: "256Mi" }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: modelroute }
+spec:
+  selector: { app: modelroute }
+  ports: [{ port: 80, targetPort: 8000 }]

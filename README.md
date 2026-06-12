@@ -16,7 +16,7 @@
 </div>
 
 ```bash
-pip install cognis-modelroute
+pip install "git+https://github.com/cognis-digital/modelroute.git"
 modelroute scan .            # → prioritized findings in seconds
 ```
 
@@ -52,7 +52,7 @@ AI infra
 ## Quick start
 
 ```bash
-pip install cognis-modelroute
+pip install "git+https://github.com/cognis-digital/modelroute.git"
 modelroute --version
 modelroute scan .                       # scan current project
 modelroute scan . --format json         # machine-readable

@@ -15,10 +15,9 @@ Standard library only.
 
 from __future__ import annotations
 
-import json
 import re
-from dataclasses import dataclass, field
-from typing import Callable, Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Callable, List, Optional, Tuple
 
 # ---------------------------------------------------------------------------
 # Data model

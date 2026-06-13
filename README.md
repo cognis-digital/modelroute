@@ -20,6 +20,33 @@ pip install cognis-modelroute
 modelroute scan .            # → prioritized findings in seconds
 ```
 
+## Usage — step by step
+
+`modelroute` is a local model router/proxy that resolves a model alias into a
+provider fallback chain and builds the dispatch request. Console script: `modelroute`.
+
+1. **Install** from a clone:
+   ```bash
+   pip install -e .
+   ```
+2. **Resolve an alias** into a fallback chain + request plan:
+   ```bash
+   modelroute route fast --prompt "Summarize this changelog" --strategy local-first
+   ```
+3. **Inspect what's configured** — list providers and models:
+   ```bash
+   modelroute providers
+   modelroute models fast
+   ```
+4. **Read the output** — `--format json` returns the chosen candidate and full chain:
+   ```bash
+   modelroute --format json route fast -p "hi" | jq '.chosen, .fallback_chain'
+   ```
+5. **Simulate an outage** — verify failover by failing named providers:
+   ```bash
+   modelroute simulate fast -p "hi" --fail openai,anthropic
+   ```
+
 ## Contents
 
 - [Why modelroute?](#why) · [Features](#features) · [Quick start](#quick-start) · [Example](#example) · [Architecture](#architecture) · [AI stack](#ai-stack) · [How it compares](#how-it-compares) · [Integrations](#integrations) · [Install anywhere](#install-anywhere) · [Related](#related) · [Contributing](#contributing)

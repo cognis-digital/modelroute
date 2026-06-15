@@ -78,7 +78,13 @@ DEFAULT_PROVIDERS: Tuple[Provider, ...] = (
         base_url="http://localhost:8000",
         tier=TIER_REGIONAL,
         models=(
-            Model("meta-llama/Llama-3.1-8B-Instruct", ("llama3", "fast"), 131072, 0.0, 0.0),
+            Model(
+                "meta-llama/Llama-3.1-8B-Instruct",
+                ("llama3", "fast"),
+                131072,
+                0.0,
+                0.0,
+            ),
             Model("Qwen/Qwen2.5-7B-Instruct", ("qwen", "coder"), 32768, 0.0, 0.0),
         ),
     ),
@@ -100,8 +106,16 @@ DEFAULT_PROVIDERS: Tuple[Provider, ...] = (
         tier=TIER_CLOUD,
         requires_key=True,
         models=(
-            Model("claude-3-5-haiku-20241022", ("fast", "haiku"), 200000, 0.80, 4.00),
-            Model("claude-3-5-sonnet-20241022", ("smart", "big", "sonnet"), 200000, 3.00, 15.00),
+            Model(
+                "claude-3-5-haiku-20241022", ("fast", "haiku"), 200000, 0.80, 4.00
+            ),
+            Model(
+                "claude-3-5-sonnet-20241022",
+                ("smart", "big", "sonnet"),
+                200000,
+                3.00,
+                15.00,
+            ),
         ),
     ),
 )
@@ -155,17 +169,28 @@ def _matches(providers: Tuple[Provider, ...], alias: str) -> List[Candidate]:
     return out
 
 
-def _order(cands: List[Candidate], strategy: str, in_tok: int, out_tok: int) -> List[Candidate]:
+def _order(
+    cands: List[Candidate], strategy: str, in_tok: int, out_tok: int
+) -> List[Candidate]:
     if strategy == "local-first":
         # locals first (cheapest local cost ties broken by tier), then by cost.
-        return sorted(cands, key=lambda c: (not c.is_local, c.provider.tier, c.est_cost(in_tok, out_tok)))
+        def _lf_key(c: Candidate):
+            return (not c.is_local, c.provider.tier, c.est_cost(in_tok, out_tok))
+
+        return sorted(cands, key=_lf_key)
     if strategy == "cheapest":
-        return sorted(cands, key=lambda c: (c.est_cost(in_tok, out_tok), c.provider.tier))
+        return sorted(
+            cands, key=lambda c: (c.est_cost(in_tok, out_tok), c.provider.tier)
+        )
     if strategy == "fastest":
-        return sorted(cands, key=lambda c: (c.provider.tier, c.est_cost(in_tok, out_tok)))
+        return sorted(
+            cands, key=lambda c: (c.provider.tier, c.est_cost(in_tok, out_tok))
+        )
     if strategy == "quality":
         # Higher output cost is a (rough) proxy for capability; locals last.
-        return sorted(cands, key=lambda c: (c.is_local, -c.model.out_cost, c.provider.tier))
+        return sorted(
+            cands, key=lambda c: (c.is_local, -c.model.out_cost, c.provider.tier)
+        )
     raise RouteError(f"unknown strategy: {strategy}")
 
 
@@ -193,13 +218,33 @@ def resolve(
 # ---------------------------------------------------------------------------
 
 
-def build_request(cand: Candidate, messages: List[dict], max_tokens: int = 512,
-                  temperature: float = 0.7) -> dict:
+def build_request(
+    cand: Candidate,
+    messages: List[dict],
+    max_tokens: int = 512,
+    temperature: float = 0.7,
+) -> dict:
     """Translate a normalized chat request into a provider-specific HTTP call.
 
     Returns a dict describing method/url/headers/body so a caller can fire it
     with urllib (no network performed here).
+
+    Raises RouteError for invalid inputs (empty messages, bad types, out-of-range
+    numeric parameters) so callers always get a clean error, never a TypeError.
     """
+    if not isinstance(messages, list) or len(messages) == 0:
+        raise RouteError("messages must be a non-empty list")
+    for i, msg in enumerate(messages):
+        if not isinstance(msg, dict):
+            raise RouteError(f"messages[{i}] must be a dict, got {type(msg).__name__}")
+        if "role" not in msg:
+            raise RouteError(f"messages[{i}] is missing required key 'role'")
+    if not isinstance(max_tokens, int) or max_tokens < 1:
+        raise RouteError(f"max_tokens must be a positive integer, got {max_tokens!r}")
+    if not isinstance(temperature, (int, float)) or not (0.0 <= temperature <= 2.0):
+        raise RouteError(
+            f"temperature must be a float in [0.0, 2.0], got {temperature!r}"
+        )
     kind = cand.provider.kind
     base = cand.provider.base_url.rstrip("/")
     headers = {"Content-Type": "application/json"}
@@ -258,7 +303,19 @@ def estimate_tokens(text: str) -> int:
 
 
 def messages_tokens(messages: List[dict]) -> int:
-    return sum(estimate_tokens(m.get("content", "")) + 3 for m in messages)
+    """Estimate total tokens for a message list.
+
+    Non-string content (None, int, list, etc.) is treated as empty string.
+    Missing or empty messages list returns 0.
+    """
+    if not messages:
+        return 0
+    total = 0
+    for m in messages:
+        raw = m.get("content", "") if isinstance(m, dict) else ""
+        content = raw if isinstance(raw, str) else ""
+        total += estimate_tokens(content) + 3
+    return total
 
 
 def dispatch(
@@ -271,7 +328,11 @@ def dispatch(
     `sender(req) -> dict` performs the actual call. It is injected so the
     planning path is testable offline. A sender may raise to signal failure;
     the next candidate is attempted (fallback).
+
+    Raises RouteError immediately when chain is empty.
     """
+    if not chain:
+        raise RouteError("dispatch called with an empty candidate chain")
     errors: List[str] = []
     for cand in chain:
         req = request_builder(cand)

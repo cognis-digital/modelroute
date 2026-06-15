@@ -35,12 +35,22 @@ def _emit(payload, fmt: str, rows: Optional[List[tuple]] = None) -> None:
 def _load_messages(args: argparse.Namespace) -> List[dict]:
     """Build a chat message list from --prompt/--system/--messages-file/stdin."""
     if getattr(args, "messages_file", None):
-        with open(args.messages_file, "r", encoding="utf-8") as fh:
-            data = json.load(fh)
+        path = args.messages_file
+        try:
+            with open(path, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+        except FileNotFoundError:
+            raise RouteError(f"messages file not found: {path!r}")
+        except json.JSONDecodeError as exc:
+            raise RouteError(f"messages file is not valid JSON ({path!r}): {exc}")
         if isinstance(data, dict) and "messages" in data:
             data = data["messages"]
         if not isinstance(data, list):
-            raise RouteError("messages file must be a JSON list or {messages:[...]}")
+            raise RouteError(
+                "messages file must be a JSON list or {\"messages\":[...]}"
+            )
+        if len(data) == 0:
+            raise RouteError("messages file contains an empty message list")
         return data
     msgs: List[dict] = []
     if getattr(args, "system", None):
@@ -102,8 +112,12 @@ def _cmd_providers(args: argparse.Namespace) -> int:
 def _cmd_models(args: argparse.Namespace) -> int:
     data = list_models()
     if args.alias:
-        data = [m for m in data if args.alias.lower() in
-                [a.lower() for a in m["aliases"]] or m["model"].lower() == args.alias.lower()]
+        needle = args.alias.lower()
+        data = [
+            m for m in data
+            if needle in [a.lower() for a in m["aliases"]]
+            or m["model"].lower() == needle
+        ]
     rows = [("provider", "model", "aliases", "ctx", "in$/1M", "out$/1M")]
     for m in data:
         rows.append((m["provider"], m["model"], ",".join(m["aliases"]),
@@ -146,7 +160,9 @@ def build_parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="cmd")
 
     def add_chat_args(sp):
-        sp.add_argument("model", help="model alias or native id (e.g. 'fast', 'llama3')")
+        sp.add_argument(
+            "model", help="model alias or native id (e.g. 'fast', 'llama3')"
+        )
         sp.add_argument("-s", "--strategy", choices=STRATEGIES, default="local-first")
         sp.add_argument("-p", "--prompt", help="user prompt text")
         sp.add_argument("--system", help="system prompt")
@@ -156,7 +172,9 @@ def build_parser() -> argparse.ArgumentParser:
         sp.add_argument("--have-keys", action="store_true",
                         help="include cloud providers that require API keys")
 
-    sp_route = sub.add_parser("route", help="resolve alias to a fallback chain + request plan")
+    sp_route = sub.add_parser(
+        "route", help="resolve alias to a fallback chain + request plan"
+    )
     add_chat_args(sp_route)
     sp_route.set_defaults(func=_cmd_route)
 
@@ -180,6 +198,21 @@ def main(argv: Optional[List[str]] = None) -> int:
     args = parser.parse_args(argv)
     if not getattr(args, "cmd", None):
         parser.print_help()
+        return 2
+    # Validate numeric args that argparse can't range-check directly.
+    max_tokens = getattr(args, "max_tokens", None)
+    if max_tokens is not None and max_tokens < 1:
+        print(
+            json.dumps({"error": "--max-tokens must be a positive integer"}),
+            file=sys.stderr,
+        )
+        return 2
+    temperature = getattr(args, "temperature", None)
+    if temperature is not None and not (0.0 <= temperature <= 2.0):
+        print(
+            json.dumps({"error": "--temperature must be between 0.0 and 2.0"}),
+            file=sys.stderr,
+        )
         return 2
     try:
         return args.func(args)

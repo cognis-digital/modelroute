@@ -1,0 +1,18 @@
+$ modelroute-emit --help
+
+usage: modelroute [-h] [--version] [--format {table,json}]
+                  {route,simulate,providers,models} ...
+
+Local model router/proxy with fallback.
+
+positional arguments:
+  {route,simulate,providers,models}
+    route               resolve alias to a fallback chain + request plan
+    simulate            route + dispatch with simulated outages
+    providers           list configured providers
+    models              list models (optionally filter by alias)
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --format {table,json}

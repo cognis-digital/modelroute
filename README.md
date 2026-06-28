@@ -20,6 +20,63 @@ pip install cognis-modelroute
 modelroute scan .            # → prioritized findings in seconds
 ```
 
+
+<!-- cognis:example:start -->
+## 🔎 Example output
+
+Real, reproducible output from the tool — runs offline:
+
+```console
+$ modelroute-emit --version
+modelroute 0.1.0
+```
+
+```console
+$ modelroute-emit --help
+usage: modelroute [-h] [--version] [--format {table,json}]
+                  {route,simulate,providers,models} ...
+
+Local model router/proxy with fallback.
+
+positional arguments:
+  {route,simulate,providers,models}
+    route               resolve alias to a fallback chain + request plan
+    simulate            route + dispatch with simulated outages
+    providers           list configured providers
+    models              list models (optionally filter by alias)
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --format {table,json}
+```
+
+> Blocks above are real `modelroute` output — reproduce them from a clone.
+
+**Sample result format** _(illustrative values — run on your own data for real findings):_
+
+```
+{
+"finding": {
+"id": "1234567890",
+"name": "Suspicious Network Traffic",
+"description": "Network traffic from unknown IP address",
+"confidence": 0.8,
+"created_by": "AI System",
+"created_at": "2023-02-20T14:30:00Z"
+},
+"indicators": [
+{
+"type": "ip",
+"value": "192.168.1.100",
+"label": "Malicious IP Address"
+}
+]
+}
+```
+
+<!-- cognis:example:end -->
+
 ## Usage — step by step
 
 `modelroute` is a local model router/proxy that resolves a model alias into a

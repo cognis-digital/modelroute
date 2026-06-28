@@ -1,0 +1,3 @@
+$ modelroute-emit --version
+
+modelroute 0.1.0
